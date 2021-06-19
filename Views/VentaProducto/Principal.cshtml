@@ -1,0 +1,107 @@
+﻿
+@{
+    ViewBag.Title = "Principal";
+    Layout = "~/Views/Shared/_LayoutPrincipal.cshtml";
+}
+
+
+
+
+
+<div class="container col-md-11">
+
+
+    <div class="row" id="row">
+        <div class="col-md-12 p-2">
+
+            <div id="banner" class="">
+                <div id="bannerProducto" class="">
+                    <img src="~/img/banner.jpg" alt="">
+                </div>
+                <div id="botonesBanner">
+                    <p>Te damos la bienvenida a Online Shopping</p>
+                    <button id="registrate" class="btn btn-outline-primary" type="submit">Registrate</button>
+                    <button id="login" class="btn btn-outline-success" type="submit">Login</button>
+                </div>
+            </div>
+
+
+            <div class="card my-2 h-auto">
+                <div id="resultadoProducto" class="card-body">
+
+
+
+                </div>
+            </div>
+
+           
+        </div>
+    </div>
+</div>
+
+
+
+
+<br>
+<br>
+<script>
+    cargarProductos();
+    //METODO FECTH
+
+    function cargarProductos() {
+        
+           
+        fetch("/VentaProducto/ListaProducto").
+            then(response => response.json()).
+            then(response => {
+                let resultado = '';
+               
+                console.log(response);
+                for (let i in response) {
+                  
+                    resultado += `<div id="imgSeleccion">
+                            <a id="mienlace" href="seleccionaProductos/${response[i].codigo}"><img id="" class="" src="${response[i].foto.slice(1)}" alt=""></a>
+                            <p> ${response[i].nombre} <br> S/. ${response[i].precio}</p>
+                            
+                        </div> `
+                }
+
+                document.getElementById("resultadoProducto").innerHTML = resultado;
+                
+            })
+    }
+    function obtener(nom) {
+        fetch("buscarProducto?nom=" + nom).
+            then(response => response.json()).
+            then(response => {
+                let resultado = '';
+                console.log(response);
+                for (let i in response) {
+                    resultado += `<div id="imgSeleccion">
+                            <a id="mienlace" href="seleccionaProductos/${response[i].codigo}"><img id="" class="" src="${response[i].foto.slice(1)}" alt=""></a>
+                            <p> ${response[i].nombre} S/. ${response[i].precio}</p>
+                            
+                        </div> `
+                }
+                document.getElementById("resultadoProducto").innerHTML = resultado;
+            })
+    }
+    
+    document.getElementById("search").addEventListener('keyup',  () => {
+        let valor = document.getElementById('search').value;
+        if (valor == "" || valor == 0) {
+            cargarProductos();
+        } else {
+            obtener(valor);
+        }
+
+    });
+
+
+
+
+
+
+</script>
+
+

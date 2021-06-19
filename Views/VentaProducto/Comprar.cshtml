@@ -1,0 +1,202 @@
+﻿@model IEnumerable<Proyecto_DSWI.Models.Item>
+
+@{
+    ViewBag.Title = "Comprar";
+    Layout = "~/Views/Shared/_LayoutPrincipal.cshtml";
+}
+
+
+<link href="~/css/comprar.css" rel="stylesheet" />
+
+
+
+
+<div id="container" class="container col-md-11">
+
+    <div class="row" id="row">
+        <div id="productos" class="col-sm-9">
+
+        </div>
+
+
+        <div id="compra" class="col-sm-3 p-2">
+            <div class="card my-2 h-auto">
+
+                <div class="card-header">
+                    <h3>Generar Compra</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="">SubTotal:</label>
+                        <input class="form-control" type="text" name="name" id="sub" value="" readonly />
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="">Total a Pagar:</label>
+                        <input class="form-control" type="text" name="name" id="total" value="" readonly />
+                    </div>
+
+
+
+                </div>
+                <div class="card-footer">
+                    <span class="my-">
+                        @Html.ActionLink("Retornar", "Principal", "",
+                       new { @class = "btn btn-success btn-block" })
+                        <button id="pagarTodo" onclick="PagarTodo();" class="btn btn-danger btn-block p-2">Pagar</button>
+                    </span>
+                    <br />
+
+                    <p id="">
+
+
+                    </p>
+
+
+
+                </div>
+
+            </div>
+            <br />
+            <br />
+            <br />
+        </div>
+
+
+    </div>
+
+    <h6 class="col-md-5">
+    </h6>
+
+</div>
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+<script>
+    ListaItem();
+
+    function ListaItem() {
+        var cantidad = document.getElementById("sesion");
+        var cantidad2 = document.getElementById("sesion2");
+
+
+        fetch("/VentaProducto/ListaItem").
+            then(response => response.json()).
+            then(response => {
+
+                let resultado = '';
+
+                let totalPagar = '';
+
+
+                console.log(response);
+                for (let i in response) {
+
+                    resultado += `
+
+
+                             <div class="col-md-12 p-2">
+                                 <div class="card my-2 h-auto">
+                                    <div id="resultadoSeleccion" class="card-body">
+                                         <input class="task-delete" taskId="" type="hidden" id="codPro" name="" value="${response[i].codigo}" />
+                                         <div id="imgSeleccion">
+                                         <img class="" src=${response[i].foto.slice(1)} alt="">
+                                         </div>
+                                         <div id="contenedorSeleccion">
+                                          <div id="DescSeleccion">
+                                           <span> ${response[i].nombre}</span>
+                                           <a href="#" class="">${response[i].descripcion} </a>
+                                          </div>
+                                         <div id="precioSeleccion">
+                                          <span class="">Precio: S/. ${response[i].precio}</span>
+                                         </div>
+                                         <div id="cantidadSeleccion">
+                                        </div>
+                                       </div>
+                                       <div id="subtotal">
+                                       <p>
+                                       <button class="fas fa-trash-alt btn btn-danger" onclick="elimina(${response[i].codigo})"></button>
+                                       </p>
+                                       <p>
+                                       <label for="cantidad">cantidad:</label>
+                                       ${response[i].cantidad}
+                                       </p>
+                                       <p>
+                                       <label for="subtotal">SubTotal:</label>
+                                       S/. ${response[i].subtotal}
+                                       </p>
+                                 </div>
+                             </div>
+                           </div>
+    </div>
+
+
+                                    `
+                }
+
+
+
+
+                document.getElementById("productos").innerHTML = resultado;
+
+
+
+
+
+            })
+    }
+    ActualizarMonto();
+    function elimina(id) {
+
+        fetch("eliminaProducto?id=" + id).
+            then(response => response.json()).
+            then(data => {
+
+                ListaItem();
+                ActualizarMonto();
+                cargarItem();
+            });
+    }
+    function ActualizarMonto() {
+
+        fetch("actualizarTotal").
+            then(response => response.json()).
+            then(data => {
+                console.log(data);
+                document.getElementById("sub").value = 'S/. ' + data;
+
+                document.getElementById("total").value = 'S/. ' + data;
+
+
+            })
+
+
+    }
+
+
+
+    function PagarTodo() {
+
+        Swal.fire(
+            'Pago!',
+            'Pagar por Paypal o Visa',
+            'success'
+        )
+    }
+
+
+
+</script>
+
+    <script src="https://www.paypal.com/sdk/js?client-id=sb"></script>
+<script>paypal.Buttons().render('h6');</script>

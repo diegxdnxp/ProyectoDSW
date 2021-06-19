@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Login.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="~/css/estillos.css">
+
+   
+</head>
+<body>
+    @{
+        if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            <div class="alert alert-danger">@ViewBag.Message</div>
+        }
+    }
+
+    <section>
+        <div class="general">
+            <div class="user singinBox">
+                <div class="imgBx"><img src="~/img/login2.png" alt="Login"></div>
+                <div class="formBx">
+                    <form action="" method="post">
+                        <h2>Inicia Sesion</h2>
+                        <input id="usuario" type="text" name="correo" value="" placeholder="&#128272; Usuario">
+                        <input id="password" type="password" name="contraseña" placeholder="&#128273; Contraseña">
+                        <input id="ingresar" type="submit" name="ingresar" value="Ingresar">
+                        <p class="signup">No tienes cuenta? <a href="#" onclick="toggleForm()">Registrate</a></p>
+                    </form>
+                </div>
+            </div>
+
+            <div class="user singupBx">
+                <div class="formBx">
+                    <form id="formRegistra">
+                        <h2>Registrarse</h2>
+                        <input type="text" name="usuario" value="" placeholder="Usuario" required>
+                        <input type="email" name="correo" value="" placeholder="Correo" required>
+                        <input type="password" name="contraseña" value="" placeholder="Contraseña" required>
+                        <!--<input type="password" name="u_contraseña2"  value="" placeholder="Confirmar Contraseña">--!-->
+                        <input type="submit" name="registrar" value="Registrarse">
+                        <p class="signup">ya tienes una cuenta? <a href="#" onclick="toggleForm()">Iniciar Sesión</a></p>
+                    </form>
+                </div>
+                <div class="imgBx"><img src="~/img/registro2.png" alt="Registro"></div>
+            </div>
+        </div>
+    </section>
+    <script>
+        function toggleForm() {
+            //alert("jss");
+            var container = document.querySelector('.general');
+            container.classList.toggle("active");
+            /* const container = document.querySelector('.container');
+            container.classList.add("active");*/
+        }
+    </script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#ingresar').click(function (e) {
+                var usuario = $('#usuario').val();
+                var contraseña = $('#password').val();
+
+                if (usuario == "admin" && contraseña == "1234") {
+                    console.log("ir");
+                      window.location.href = "@Url.Content("~/Producto/IndexProducto")";
+                   
+                }
+
+
+                else {
+                    window.location.href = "Principal";
+
+                }
+
+                e.preventDefault();
+
+            });
+
+
+
+
+
+
+        });
+
+
+    </script>
+    <script>
+
+        //AGREGAR
+    const formulario = document.getElementById("formRegistra");
+    formulario.addEventListener('submit', function (e) {
+       // var codigo = document.getElementById("codigo").value;
+
+
+        e.preventDefault();
+        var datos = new FormData(formulario);
+
+
+        fetch("@Url.Content("~/Producto/nuevoUsuario")", {
+            method: 'POST',
+            body: datos
+        }).
+            then(response => response.text()).
+            then(respuesta => {
+                console.log(respuesta);
+                console.log("Agregado");
+
+
+                    Swal.fire({
+                        position: 'top',
+                        icon: 'success',
+                        title: 'Registrado',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+            });
+    });
+
+    </script>
+
+</body>
+</html>
+

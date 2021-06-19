@@ -1,0 +1,66 @@
+﻿@model Proyecto_DSWI.Models.ProductoO
+
+@{
+    ViewBag.Title = "seleccionaProducto";
+    Layout = "~/Views/Shared/_LayoutPrincipal.cshtml";
+}
+
+
+<link href="~/css/seleccion.css" rel="stylesheet" />
+
+
+<div class="container">
+    <div class="row" id="row">
+        <div class="col-md-12 p-2">
+            <div class="card my-2 h-auto">
+
+                <div id="resultadoSeleccion" class="card-body">
+                    <input type="hidden" id="codPro" name="name" value="@Html.DisplayFor(model => model.codigo)" />
+                    <div id="imgSeleccion">
+                        <img id="" class="" src="@Url.Content(Model.foto)" alt="">
+                    </div>
+                    <div id="contenedorSeleccion">
+                        <div id="DescSeleccion">
+                            <p>@Html.DisplayFor(model => model.nombre)</p>
+                            <a href="#" class="">
+                                @Html.DisplayFor(model => model.descripcion)
+                            </a>
+                           
+                        </div>
+                        <div id="precioSeleccion">
+
+                            <span class="">Precio: S/. @Html.DisplayFor(model => model.precio)</span>
+                            <p>@Html.DisplayFor(model => model.stockActual) unidades disponibles</p>
+                        </div>
+
+                        
+                        @using (Html.BeginForm("agregarProducto", "VentaProducto"))
+                        {
+
+                            @Html.Hidden("id", Model.codigo)
+                    <div id="cantidadSeleccion">
+                        <label for="cantidad">cantidad:</label>
+                        <input type="number" name="cant" id="cantidad" value="1">
+                       
+                    </div>
+                           
+                      @Html.ActionLink("CANCELAR", "Principal", "",
+                            new { @class = "btn btn-primary" })
+                            <input type="submit" value="Añadir a la cesta" class="btn btn-danger" />
+
+                        }
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+

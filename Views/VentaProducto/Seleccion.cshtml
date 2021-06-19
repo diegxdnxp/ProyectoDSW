@@ -1,0 +1,73 @@
+﻿
+@{
+    ViewBag.Title = "Seleccion";
+    Layout = "~/Views/Shared/_LayoutPrincipal.cshtml";
+}
+<link href="~/css/seleccion.css" rel="stylesheet" />
+
+<div class="container">
+    <div class="row" id="row">
+        <div class="col-md-12 p-2">
+            <div class="card my-2 h-auto">
+                <div id="resultadoSeleccion" class="card-body">
+                    
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<br>
+<br>
+
+<script>
+   
+
+ 
+
+    async function obtener(id) {
+        await fetch('/VentaProducto/seleccionaProducto?nombre=' + id).
+            then(response => response.json()).
+            then(response => {
+                let resultado = '';
+                console.log(response);
+                resultado += `<div id="imgSeleccion">
+                        <img id="" class="" src="${response.foto.slice(1)}" alt="">
+                    </div>
+                    <div id="contenedorSeleccion">
+                        <div id="DescSeleccion">
+                            <a href="#" class="">${response.descripcion}
+                            </a>
+                        </div>
+                        <div id="precioSeleccion">
+                            <span class="">${response.precio}</span>
+                        </div>
+                        <div id="cantidadSeleccion">
+                            <label for="cantidad">cantidad:</label>
+                            <input type="number" name="" id="cantidad" value="1">
+                        </div>
+                        <div id="botones" class="">
+                            <button class="btn btn-danger">Comprar</button>
+                            <button class="btn btn-info">Añadir a la cesta</button>
+                        </div>
+                    </div>`
+
+                document.getElementById("resultadoSeleccion").innerHTML = resultado;
+            })
+
+    }
+
+    document.getElementById("search").addEventListener('keyup', async () => {
+       let valor = document.getElementById('search').value;
+        if (valor == "" || valor == 0) {
+            await obtener('Drone');
+        } else {
+            await obtener(valor);
+       }
+    
+    });
+
+
+</script>

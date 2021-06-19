@@ -1,0 +1,422 @@
+﻿
+@{
+    ViewBag.Title = "CrudProducto";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<div class="container">
+    <div class="my-2">
+        <button id="btnNuevo" type="button" class="btn btn-primary" data-toggle='modal' data-target='#ModalAgregar'>Agregar Producto</button>
+    </div>
+    <table id="tablaProducto" class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Proveedor</th>
+                <th scope="col">Editar</th>
+                <th scope="col">Eliminar</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+
+</div>
+
+
+
+
+<div class="modal fade modal" id="ModalAgregar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="col-md-10 modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Producto</h5>
+                <button id="" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" id="formRegistra" enctype="multipart/form-data">
+                    <input type="hidden" name="codigo" id="codigo" value="" />
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="nombre" placeholder="producto"
+                               id="nombreProducto">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" name="categoria" id="categoriaProducto"></select>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="stockActual" placeholder="Stock"
+                               id="stockProducto">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="number" name="precio" placeholder="Precio"
+                               id="precioProducto">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="descripcion" placeholder="Descripcion"
+                               id="descripcionProducto">
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control" type="file" name="f" placeholder="Foto"
+                               id="fotoProducto">
+                    </div>
+
+
+                    <div class="form-group">
+                        <select class="form-control" name="proveedor" id="proveedorProducto"></select>
+                    </div>
+
+                    <button id="registrar" class="form-control btn btn-primary" type="submit">Registrar</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade modal" id="ModalActualizar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="col-md-10 modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Actualizar Producto</h5>
+                <button id="" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" id="formActualiza" enctype="multipart/form-data">
+                    <input type="hidden" name="codigo" id="codigoA" value="" />
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="nombre" placeholder="producto"
+                               id="nombreProductoA">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" name="categoria" id="categoriaProductoA"></select>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="stockActual" placeholder="Stock"
+                               id="stockProductoA">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="number" name="precio" placeholder="Precio"
+                               id="precioProductoA">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="descripcion" placeholder="Descripcion"
+                               id="descripcionProductoA">
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control" type="hidden" name="foto" placeholder="Foto"
+                               id="fotoProductoA">
+                      
+                        <div id="foto">
+
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <select class="form-control" name="proveedor" id="proveedorProductoA"></select>
+                    </div>
+
+                    <button id="actualizar" class="form-control btn btn-primary" type="submit">Actualizar</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    listarProductos();
+    cargarProveedor();
+    cargarCategoria();
+    function listarProductos() {
+        var e = 1;
+        var editar = "<button type='button' data-toggle='modal'  data-target='#ModalActualizar'" +
+            "class='btn btn-success' id='idEditar'>Editar</button>";
+
+        var foto = "<button type='button' data-toggle='modal'  data-target='#myModalFoto'" +
+            "class='btn btn-warning' id='btnFoto'>Foto</button>";
+        const table = document.querySelector("tbody");
+
+        fetch("ListaProducto").
+            then(response => response.json()).
+            then(respuesta => {
+                console.log(respuesta)
+                let resultado = "";
+                for (let i = 0; i < respuesta.length; i++) {
+
+                    resultado += '<tr taskId=' + respuesta[i].codigo + '>' + '<td>' + e++ + '</td>' +
+                        '<td>' + respuesta[i].nombre + '</td>' +
+                        '<td>' + respuesta[i].descripcion + '</td>' +
+                        '<td>' + 'S/.' + respuesta[i].precio + '</td>' +
+                        '<td>' + respuesta[i].stockActual + '</td>' +
+                        '<td>' + respuesta[i].categoria + '</td>' +
+                        '<td>' + respuesta[i].proveedor + '</td>' +
+                        '<td>' + "<button onclick='editar(" + respuesta[i].codigo +")'  type='button' data-toggle='modal'  data-target='#ModalActualizar'" +
+                        "class='btn btn-success' id='idEditar'>Editar</button>"+'</td>' +
+                        '<td>'+"<button onclick='elimina("+respuesta[i].codigo+")' type='button'"+
+                            "class='btn btn-danger' id='idEliminar'>Eliminar</button>"+'</td>'+
+                        
+                        '</tr>'
+
+                }
+
+                table.innerHTML = resultado;
+                $('#tablaProducto').DataTable({
+                    language: {
+                        "decimal": "",
+                        "emptyTable": "No hay información",
+                        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                        "infoPostFix": "",
+                        "thousands": ",",
+                        "lengthMenu": "Mostrar _MENU_ Entradas",
+                        "loadingRecords": "Cargando...",
+                        "processing": "Procesando...",
+                        "search": "Buscar:",
+                        "zeroRecords": "Sin resultados encontrados",
+                        "paginate": {
+                            "first": "Primero",
+                            "last": "Ultimo",
+                            "next": "Siguiente",
+                            "previous": "Anterior"
+                        }
+                    },
+                });
+
+            });
+
+
+    }
+
+
+
+
+
+
+    //AGREGAR
+    const formulario = document.getElementById("formRegistra");
+    formulario.addEventListener('submit', function (e) {
+        var codigo = document.getElementById("codigo").value;
+
+
+        e.preventDefault();
+        var datos = new FormData(formulario);
+
+
+        fetch("@Url.Content("~/Producto/nuevoProducto")", {
+            method: 'POST',
+            body: datos
+        }).
+            then(response => response.text()).
+            then(respuesta => {
+                console.log("Agregado");
+
+                $('#ModalAgregar').modal('hide')
+
+
+                listarProductos();
+                $('#tablaProducto').DataTable().destroy();
+                resetear();
+                
+                    Swal.fire({
+                        position: 'top',
+                        icon: 'success',
+                        title: 'Registrado',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+            });
+    });
+
+
+    //ACTUALIZAR
+    const formularioA = document.getElementById("formActualiza");
+    formularioA.addEventListener('submit', function (e) {
+        var codigo = document.getElementById("codigoA").value;
+        
+
+        e.preventDefault();
+        var datos = new FormData(formularioA);
+
+
+
+        fetch("actualizaProducto?id=" + codigo, {
+            method: 'POST',
+            body: datos
+        }).
+        then(response => response.text()).
+            then(respuesta => {
+                console.log("Actualizado");
+
+                Swal.fire({
+                    position: 'top',
+                    icon: 'success',
+                    title: 'Actualizado',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                $('#ModalActualizar').modal('hide')
+
+
+                listarProductos();
+                $('#tablaProducto').DataTable().destroy();
+                resetear();
+        });
+
+
+
+
+
+    });
+
+    //const editar = document.getElementById("idEditar");
+    function editar(id){
+      
+       
+        fetch("BuscarProducto?id=" + id).
+            then(response => response.json()).
+            then(respuesta => {
+                let resultado = "";
+                let resultado2 = "";
+                let resultado3 = "";
+                console.log(respuesta)
+                for (let i in respuesta) {
+
+                    document.getElementById("codigoA").value = respuesta[i].codigo;
+                    document.getElementById("nombreProductoA").value = respuesta[i].nombre;
+                    document.getElementById("descripcionProductoA").value = respuesta[i].descripcion;
+                    document.getElementById("precioProductoA").value = respuesta[i].precio;
+                    document.getElementById("stockProductoA").value = respuesta[i].stockActual;
+                    document.getElementById("fotoProductoA").value = respuesta[i].foto;
+                    document.getElementById("categoriaProductoA").value = respuesta[i].categoria;
+                    document.getElementById("proveedorProductoA").value = respuesta[i].proveedor;
+                    //Combos
+                  
+                    resultado3 += `<div id="imgSeleccion">
+                        <img id="" class="w-25" src="${respuesta[i].foto.slice(1)}" alt="">
+                    </div>`
+                }
+               
+                document.getElementById("foto").innerHTML = resultado3;
+
+            });
+    }
+
+    function resetear() {
+      document.getElementById("codigo").value = 0;
+      document.getElementById("nombreProducto").value = "";
+        document.getElementById("descripcionProducto").value = "";
+    document.getElementById("precioProducto").value = "";
+        document.getElementById("stockProducto").value = "";
+     document.getElementById("categoriaProducto").value = "";
+        document.getElementById("proveedorProducto").value = "";
+  document.getElementById("fotoProducto").value = "";
+    }
+
+    const btnRegistrar = document.getElementById("btnNuevo");
+    btnRegistrar.addEventListener('click', function (e) {
+        const codigo = document.getElementById("codigo");
+        codigo.value = 0;
+    })
+
+
+
+    function cargarProveedor() {
+
+            fetch("@Url.Content("~/Producto/ObtenerProveedor")").
+                then(response => response.json())
+                .then(miJson => {
+                console.log(miJson);
+                let resultado = "";
+                for (let i = 0; i < miJson.length; i++) {
+                    resultado += "<option value='" + miJson[i].codigo + "'> " + miJson[i].nomprov + "</option >"
+
+                }
+                    document.getElementById("proveedorProducto").innerHTML = resultado;
+                    document.getElementById("proveedorProductoA").innerHTML = resultado;
+            })
+    }
+
+
+    function cargarCategoria() {
+
+
+            fetch("@Url.Content("~/Producto/ObtenerCategoria")").
+                then(response => response.json())
+                .then(miJson => {
+                console.log(miJson);
+                let resultado = "";
+                for (let i = 0; i < miJson.length; i++) {
+                    resultado += "<option value='" + miJson[i].codigo + "'> " + miJson[i].nombre + "</option >"
+
+                }
+                    document.getElementById("categoriaProducto").innerHTML = resultado;
+                    document.getElementById("categoriaProductoA").innerHTML = resultado;
+            })
+
+
+
+    }
+
+    function elimina(id) {
+
+
+        Swal.fire({
+            title: 'Esta Seguro de Eliminar?',
+            text: "Eliminar la fila",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                fetch("eliminaProductos?id=" + id).
+                    then(response => response.json()).
+                    then(data => {
+                        listarProductos();
+                        $('#tablaProducto').DataTable().destroy();
+                    });
+                Swal.fire({
+                    position: 'top',
+                    icon: 'success',
+                    title: 'Eliminado',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+        })
+
+    }
+
+
+</script>

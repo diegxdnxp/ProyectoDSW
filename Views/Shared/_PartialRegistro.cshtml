@@ -1,0 +1,41 @@
+﻿@model  Proyecto_DSWI.Models.ProductoO
+<link href="~/css/seleccion.css" rel="stylesheet" />
+
+
+    <div class="container">
+        <div class="row" id="row">
+            <div class="col-md-12 p-2">
+                <div class="card my-2 h-auto">
+
+                    <div id="resultadoSeleccion" class="card-body">
+                        <input type="hidden" id="codPro" name="name" value="@Html.DisplayFor(model => model.codigo)" />
+                        <div id="imgSeleccion">
+                            <img id="" class="" src="@Url.Content(Model.foto)" alt="">
+                        </div>
+                        <div id="contenedorSeleccion">
+                            <div id="DescSeleccion">
+                                <dd>@Html.DisplayFor(model => model.nombre)</dd>
+                                <a href="#" class="">
+                                    @Html.DisplayFor(model => model.descripcion)
+                                </a>
+                                <dd>@Html.DisplayFor(model => model.stockActual)</dd>
+                            </div>
+                            <div id="precioSeleccion">
+                                <span class="">Precio: S/. @Html.DisplayFor(model => model.precio)</span>
+                            </div>
+
+                            <div id="cantidadSeleccion">
+                                <label for="cantidad">cantidad:</label>
+                                <input type="number" name="cantidad" id="cantidad" value="1">
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
